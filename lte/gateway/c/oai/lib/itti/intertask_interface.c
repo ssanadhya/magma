@@ -215,16 +215,17 @@ void* itti_malloc(
   return ptr;
 }
 
-void itti_free(task_id_t task_id, void* ptr)
+int itti_free(task_id_t task_id, void* ptr)
 {
   int rc = EXIT_SUCCESS;
 
-  if (ptr == NULL) return;
+  //if (ptr == NULL) return;
 
   rc = memory_pools_free(itti_desc.memory_pools_handle, ptr, task_id);
 
   AssertFatal(
     rc == EXIT_SUCCESS, "Failed to free memory at %p (%d)\n", ptr, task_id);
+return (rc);
 }
 
 static inline message_number_t itti_increment_message_number(void)
@@ -607,9 +608,12 @@ void itti_receive_msg(task_id_t task_id, MessageDef **received_msg)
     itti_desc.task_max);
   AssertFatal(received_msg != NULL, "Received message is NULL!\n");
 
-  thread_id = TASK_GET_THREAD_ID(task_id);
+  //thread_id = TASK_GET_THREAD_ID(task_id);
   *received_msg = NULL;
 
+itti_receive_msg_internal_event_fd(task_id, 0, received_msg);
+
+/*
   n_read = read(
     itti_desc.threads[thread_id].task_event_fd,
     &sem_counter,
@@ -620,7 +624,7 @@ void itti_receive_msg(task_id_t task_id, MessageDef **received_msg)
     thread_id,
     n_read,
     sizeof(sem_counter));
-
+//
   if (
     lfds710_queue_bmm_dequeue(
       &itti_desc.tasks[task_id].message_queue, NULL, (void**) &message) == 0) {
@@ -631,12 +635,12 @@ void itti_receive_msg(task_id_t task_id, MessageDef **received_msg)
       task_id,
       sem_counter);
   }
+*/
+  //AssertFatal(message != NULL, "Message from message queue is NULL!\n");
 
-  AssertFatal(message != NULL, "Message from message queue is NULL!\n");
+  //*received_msg = message->msg;
 
-  *received_msg = message->msg;
-
-  itti_free(ITTI_MSG_ORIGIN_ID(message->msg), message);
+  //itti_free(ITTI_MSG_ORIGIN_ID(message->msg), message);
 }
 
 int itti_create_task(
