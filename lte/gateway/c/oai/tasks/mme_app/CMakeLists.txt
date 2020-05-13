@@ -62,7 +62,6 @@ add_library(TASK_MME_APP
     mme_app_state_manager.cpp
     mme_app_state.cpp
     mme_events.cpp
-    mme_app_embedded_spgw.c
     ${PROTO_SRCS}
     ${PROTO_HDRS}
     ${S11_RELATED_SRCS}
@@ -83,7 +82,7 @@ target_link_libraries(TASK_MME_APP
   COMMON
   LIB_BSTR LIB_HASHTABLE LIB_DIRECTORYD LIB_SECU LIB_EVENT_CLIENT
   TASK_NAS TASK_S1AP TASK_SERVICE303 TASK_SCTP_SERVER
-  TASK_S6A TASK_SGS protobuf cpp_redis yaml-cpp
+  TASK_S6A TASK_SGS protobuf cpp_redis yaml-cpp redis_utils
     )
 
 if (EMBEDDED_SGW)
